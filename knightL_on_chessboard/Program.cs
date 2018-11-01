@@ -3,68 +3,97 @@ using System.Collections;
 
 namespace knightL_on_chessboard
 {
-    class Coordinates{
-        public int x;
-        public int y;
-
-        public Coordinates(int x, int y){
-            this.x = x;
-            this.y = y;
-        }
-
-    }
 
     class Knight{
         int sourceXPosition;
         int sourceYPosition;
+        Knight parent;
+        ArrayList posibleLocationsToGo;
+        Hashtable posibleLocationsToGoKeys;
 
-        Hashtable posibleCoordinatesToGo;
-
-        public Knight(int sourceXPosition, int sourceYPosition)
+        public Knight(int sourceXPosition, int sourceYPosition, Knight parent = null)
         {
             this.sourceXPosition = sourceXPosition;
             this.sourceYPosition = sourceYPosition;
-            this.posibleCoordinatesToGo = new Hashtable();
+            this.parent = parent;
+            this.posibleLocationsToGo = new ArrayList();
+            this.posibleLocationsToGoKeys = new Hashtable();
         }
 
-        public Hashtable GenerateAllPosibleCordinatesToGo(int xMovements, int yMovements){
+        public int GetSourceXPosition(){
+            return this.sourceXPosition;
+        }
+
+        public int GetSourceYPosition()
+        {
+            return this.sourceYPosition;
+        }
+
+        public ArrayList GenerateAllPosibleCordinatesToGo(int xMovements, int yMovements){
+            /*
+             * Stop conditions: 
+             * 1- no new movements, the parent must be excluded.
+             * 2- we found the target!
+             */
+
+
             //first positive posible pair
             int xDestination = sourceXPosition + xMovements;
             int yDestination = sourceYPosition + yMovements;
-            AddCoordinateToGo(xDestination, yDestination);
+            AddPosibleLocationsGo(xDestination, yDestination);
 
             //first negative posible pair
             xDestination = sourceXPosition - xMovements;
             yDestination = sourceYPosition - yMovements;
-            AddCoordinateToGo(xDestination, yDestination);
+            AddPosibleLocationsGo(xDestination, yDestination);
 
             //second positive posible pair
             xDestination = sourceXPosition + yMovements;
             yDestination = sourceYPosition + xMovements;
-            AddCoordinateToGo(xDestination, yDestination);
+            AddPosibleLocationsGo(xDestination, yDestination);
 
             //second negative posible pair
-            xDestination = sourceXPosition + yMovements;
-            yDestination = sourceYPosition + xMovements;
-            AddCoordinateToGo(xDestination, yDestination);
+            xDestination = sourceXPosition - yMovements;
+            yDestination = sourceYPosition - xMovements;
+            AddPosibleLocationsGo(xDestination, yDestination);
 
-            return posibleCoordinatesToGo;
+            xDestination = sourceXPosition - xMovements;
+            yDestination = sourceYPosition + yMovements;
+            AddPosibleLocationsGo(xDestination, yDestination);
+
+            xDestination = sourceXPosition + yMovements;
+            yDestination = sourceYPosition - xMovements;
+            AddPosibleLocationsGo(xDestination, yDestination);
+
+            xDestination = sourceXPosition + xMovements;
+            yDestination = sourceYPosition - yMovements;
+            AddPosibleLocationsGo(xDestination, yDestination);
+
+            xDestination = sourceXPosition - yMovements;
+            yDestination = sourceYPosition + xMovements;
+            AddPosibleLocationsGo(xDestination, yDestination); 
+
+            return posibleLocationsToGo;
         }
 
-        public void AddCoordinateToGo(int xDestination, int yDestination)
+        public void AddPosibleLocationsGo(int xDestination, int yDestination)
         {
-            if (isValidCoordinate(xDestination, yDestination))
+            if (IsValidLocation(xDestination, yDestination))
             {
                 String key;
                 key = xDestination.ToString() + yDestination.ToString();
-                if (posibleCoordinatesToGo.Contains(key) == false)
+                if (posibleLocationsToGoKeys.Contains(key) == false)
                 {
-                    this.posibleCoordinatesToGo.Add(key, new Coordinates(xDestination, yDestination));
+                    var newLocation = new Knight(xDestination, yDestination, this);
+                    this.posibleLocationsToGoKeys.Add(key, newLocation);
+                    this.posibleLocationsToGo.Add(newLocation);
+
                 }
             }
         }
 
-        public bool isValidCoordinate(int xPosition, int yPosition){
+        public bool IsValidLocation(int xPosition, int yPosition){
+            //this only validates if is inside the table!
             return (xPosition < 0 || xPosition > 4 || yPosition < 0 || yPosition > 4)? false : true;
         }
     }
@@ -73,14 +102,16 @@ namespace knightL_on_chessboard
     {
         public static void Main(string[] args)
         {
-            var knight = new Knight(0, 0);
-            ICollection posibleCoordinatesToGo = knight.GenerateAllPosibleCordinatesToGo(1, 2).Values;
+            var knightInInitialCoordinate = new Knight(2, 2);
+            ArrayList posibleLocationsToGo = knightInInitialCoordinate.GenerateAllPosibleCordinatesToGo(1, 2);
 
 
-            foreach (Coordinates coordinate in posibleCoordinatesToGo){
-                Console.WriteLine(coordinate.x.ToString() + coordinate.y.ToString());
+            foreach (Knight knight in posibleLocationsToGo)
+            {
+                Console.WriteLine(knight.GetSourceXPosition().ToString() + knight.GetSourceYPosition().ToString());
             }
 
+            //Console.WriteLine(((Knight)posibleLocationsToGo[0]).GetSourceXPosition().ToString());
         }
     }
 }
