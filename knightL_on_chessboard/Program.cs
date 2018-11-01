@@ -9,6 +9,7 @@ namespace knightL_on_chessboard
         int sourceYPosition;
         Knight parent;
         ArrayList posibleLocationsToGo;
+        int locationIndex;
         Hashtable posibleLocationsToGoKeys;
 
         public Knight(int sourceXPosition, int sourceYPosition, Knight parent = null)
@@ -18,6 +19,7 @@ namespace knightL_on_chessboard
             this.parent = parent;
             this.posibleLocationsToGo = new ArrayList();
             this.posibleLocationsToGoKeys = new Hashtable();
+            locationIndex = 0;
         }
 
         public int GetSourceXPosition(){
@@ -29,7 +31,13 @@ namespace knightL_on_chessboard
             return this.sourceYPosition;
         }
 
-        public ArrayList GenerateAllPosibleCordinatesToGo(int xMovements, int yMovements){
+        public Knight GetNextLocationToGo(){
+            var nextLocation = (Knight)this.posibleLocationsToGo[this.locationIndex];
+            this.locationIndex++;
+            return nextLocation;
+        }
+
+        public ArrayList GenerateAllPosibleLocationsToGo(int xMovements, int yMovements){
             /*
              * Stop conditions: 
              * 1- no new movements, the parent must be excluded.
@@ -93,6 +101,8 @@ namespace knightL_on_chessboard
         }
 
         public bool IsValidLocation(int xPosition, int yPosition){
+            //todo: not going to the parent location
+
             //this only validates if is inside the table!
             return (xPosition < 0 || xPosition > 4 || yPosition < 0 || yPosition > 4)? false : true;
         }
@@ -102,14 +112,40 @@ namespace knightL_on_chessboard
     {
         public static void Main(string[] args)
         {
-            var knightInInitialCoordinate = new Knight(2, 2);
-            ArrayList posibleLocationsToGo = knightInInitialCoordinate.GenerateAllPosibleCordinatesToGo(1, 2);
+            int targetX = 4;
+            int targetY = 4;
+            bool targetWasFound = false;
 
+            var knightInInitialLocation = new Knight(0, 0);
+            knightInInitialLocation.GenerateAllPosibleLocationsToGo(1, 2);
+            Knight nextLocation = knightInInitialLocation.GetNextLocationToGo();
 
-            foreach (Knight knight in posibleLocationsToGo)
-            {
-                Console.WriteLine(knight.GetSourceXPosition().ToString() + knight.GetSourceYPosition().ToString());
+            if(nextLocation.GetSourceXPosition() == targetX && nextLocation.GetSourceYPosition() == targetY){
+                targetWasFound = true;
             }
+
+            int count = 0;
+            while(targetWasFound == false && count < 100){
+                Console.WriteLine(nextLocation.GetSourceXPosition().ToString() + nextLocation.GetSourceYPosition().ToString());
+
+                nextLocation.GenerateAllPosibleLocationsToGo(1,2);
+                nextLocation = nextLocation.GetNextLocationToGo();
+                if (nextLocation.GetSourceXPosition() == targetX && nextLocation.GetSourceYPosition() == targetY)
+                {
+                    targetWasFound = true;
+                }
+
+                count++;
+            }
+
+
+
+
+            //ArrayList posibleLocationsToGo = knightInInitialLocation.GenerateAllPosibleLocationsToGo(0, 0);
+            //foreach (Knight knight in posibleLocationsToGo)
+            //{
+            //    Console.WriteLine(knight.GetSourceXPosition().ToString() + knight.GetSourceYPosition().ToString());
+            //}
 
             //Console.WriteLine(((Knight)posibleLocationsToGo[0]).GetSourceXPosition().ToString());
         }
