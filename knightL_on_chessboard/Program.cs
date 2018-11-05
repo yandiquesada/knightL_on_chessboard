@@ -31,13 +31,15 @@ namespace knightL_on_chessboard
             return this.sourceYPosition;
         }
 
-        public Knight GetNextLocationToGo(){
+        public Knight GetNextLocationToGo()
+        {
             var nextLocation = (Knight)this.posibleLocationsToGo[this.locationIndex];
             this.locationIndex++;
             return nextLocation;
         }
 
-        public ArrayList GenerateAllPosibleLocationsToGo(int xMovements, int yMovements){
+        public ArrayList GenerateAllPosibleLocationsToGo(int xMovements, int yMovements)
+        {
             /*
              * Stop conditions: 
              * 1- no new movements, the parent must be excluded.
@@ -86,7 +88,7 @@ namespace knightL_on_chessboard
 
         public void AddPosibleLocationsGo(int xDestination, int yDestination)
         {
-            if (IsValidLocation(xDestination, yDestination))
+            if (IsValidLocation(xDestination, yDestination) == true && IsParentLocation(xDestination, yDestination) == false)
             {
                 String key;
                 key = xDestination.ToString() + yDestination.ToString();
@@ -100,10 +102,13 @@ namespace knightL_on_chessboard
             }
         }
 
-        public bool IsValidLocation(int xPosition, int yPosition){
-            //todo: not going to the parent location
+        public bool IsParentLocation(int xPosition, int yPosition)
+        {
+            return ( this.parent != null && this.parent.GetSourceXPosition() == xPosition && this.parent.GetSourceYPosition() == yPosition)? true : false;
+        }
 
-            //this only validates if is inside the table!
+        public bool IsValidLocation(int xPosition, int yPosition)
+        {        
             return (xPosition < 0 || xPosition > 4 || yPosition < 0 || yPosition > 4)? false : true;
         }
     }
@@ -125,7 +130,7 @@ namespace knightL_on_chessboard
             }
 
             int count = 0;
-            while(targetWasFound == false && count < 100){
+            while(targetWasFound == false && count < 20){
                 Console.WriteLine(nextLocation.GetSourceXPosition().ToString() + nextLocation.GetSourceYPosition().ToString());
 
                 nextLocation.GenerateAllPosibleLocationsToGo(1,2);
@@ -139,15 +144,15 @@ namespace knightL_on_chessboard
             }
 
 
+        }
 
-
-            //ArrayList posibleLocationsToGo = knightInInitialLocation.GenerateAllPosibleLocationsToGo(0, 0);
-            //foreach (Knight knight in posibleLocationsToGo)
-            //{
-            //    Console.WriteLine(knight.GetSourceXPosition().ToString() + knight.GetSourceYPosition().ToString());
-            //}
-
-            //Console.WriteLine(((Knight)posibleLocationsToGo[0]).GetSourceXPosition().ToString());
+        public static void RunLocationGeneration(){
+            var knightInInitialLocation = new Knight(0, 0);
+            ArrayList posibleLocationsToGo = knightInInitialLocation.GenerateAllPosibleLocationsToGo(1, 2);
+            foreach (Knight knight in posibleLocationsToGo)
+            {
+                Console.WriteLine(knight.GetSourceXPosition().ToString() + knight.GetSourceYPosition().ToString());
+            }
         }
     }
 }
