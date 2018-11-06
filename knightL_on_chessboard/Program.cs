@@ -12,7 +12,6 @@ namespace knightL_on_chessboard
         Knight parent;
         ArrayList posibleLocationsToGo;
         int locationIndex;
-
         HashSet<string> keyPath;
 
         public Knight(int sourceXPosition, int sourceYPosition, HashSet<string> keyPath, Knight parent = null)
@@ -23,11 +22,11 @@ namespace knightL_on_chessboard
             this.parent = parent;
             this.posibleLocationsToGo = new ArrayList();
             locationIndex = 0;
-
             this.keyPath = keyPath;
         }
 
-        public int GetSourceXPosition(){
+        public int GetSourceXPosition()
+        {
             return this.sourceXPosition;
         }
 
