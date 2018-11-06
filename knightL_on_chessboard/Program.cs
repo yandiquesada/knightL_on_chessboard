@@ -112,6 +112,11 @@ namespace knightL_on_chessboard
     {
         public static void Main(string[] args)
         {
+            MainClass.RunDepthFirstSearch();
+            //MainClass.RunLocationGeneration();
+        }
+
+        public static void RunDepthFirstSearch(){
             int targetX = 4;
             int targetY = 4;
             bool targetWasFound = false;
@@ -121,15 +126,17 @@ namespace knightL_on_chessboard
             knightInInitialLocation.GenerateAllPosibleLocationsToGo(1, 2);
             Knight nextLocation = knightInInitialLocation.GetNextLocationToGo();
 
-            if(nextLocation.GetSourceXPosition() == targetX && nextLocation.GetSourceYPosition() == targetY){
+            if (nextLocation.GetSourceXPosition() == targetX && nextLocation.GetSourceYPosition() == targetY)
+            {
                 targetWasFound = true;
             }
 
             int count = 0;
-            while(targetWasFound == false && count < 100){
+            while (targetWasFound == false && count < 100)
+            {
                 Console.WriteLine(nextLocation.GetSourceXPosition().ToString() + nextLocation.GetSourceYPosition().ToString());
 
-                nextLocation.GenerateAllPosibleLocationsToGo(1,2);
+                nextLocation.GenerateAllPosibleLocationsToGo(1, 2);
                 nextLocation = nextLocation.GetNextLocationToGo();
                 if (nextLocation.GetSourceXPosition() == targetX && nextLocation.GetSourceYPosition() == targetY)
                 {
@@ -142,7 +149,7 @@ namespace knightL_on_chessboard
 
         public static void RunLocationGeneration(){
             HashSet<string> keyPath = new HashSet<String>();
-            var knightInInitialLocation = new Knight(0, 0, keyPath);
+            var knightInInitialLocation = new Knight(2, 1, keyPath);
             ArrayList posibleLocationsToGo = knightInInitialLocation.GenerateAllPosibleLocationsToGo(1, 2);
             foreach (Knight knight in posibleLocationsToGo)
             {
