@@ -43,7 +43,6 @@ namespace knightL_on_chessboard
                 nextLocation = (Knight)this.posibleLocationsToGo[this.locationIndex];
                 this.locationIndex++;
             }
-
             return nextLocation;
         }
 
@@ -102,11 +101,6 @@ namespace knightL_on_chessboard
                     this.posibleLocationsToGo.Add(newLocation);
                 }
             }
-        }
-
-        public bool IsParentLocation(int xPosition, int yPosition)
-        {
-            return ( this.parent != null && this.parent.GetSourceXPosition() == xPosition && this.parent.GetSourceYPosition() == yPosition)? true : false;
         }
 
         public bool IsValidLocation(int xPosition, int yPosition)
