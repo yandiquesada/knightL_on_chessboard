@@ -53,11 +53,6 @@ namespace knightL_on_chessboard
 
         public ArrayList GenerateAllPosibleLocationsToGo(int xMovements, int yMovements)
         {
-            /*
-             * Stop conditions: 
-             * 1- no new movements, the parent must be excluded.
-             * 2- we found the target!
-             */
             if(wereGeneratedAllPosibleLocationsToGo == true){
                 return this.posibleLocationsToGo;
             }
@@ -110,7 +105,6 @@ namespace knightL_on_chessboard
                     var newLocation = new Knight(xDestination, yDestination, this.keyPath, this);
                     this.posibleLocationsToGoKeys.Add(key, newLocation);
                     this.posibleLocationsToGo.Add(newLocation);
-
                 }
             }
         }
