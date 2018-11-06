@@ -13,9 +13,6 @@ namespace knightL_on_chessboard
         ArrayList posibleLocationsToGo;
         int locationIndex;
 
-        //TODO: this must be a hasset
-        Hashtable posibleLocationsToGoKeys;
-
         HashSet<string> keyPath;
 
         public Knight(int sourceXPosition, int sourceYPosition, HashSet<string> keyPath, Knight parent = null)
@@ -25,7 +22,6 @@ namespace knightL_on_chessboard
             this.wereGeneratedAllPosibleLocationsToGo = false;
             this.parent = parent;
             this.posibleLocationsToGo = new ArrayList();
-            this.posibleLocationsToGoKeys = new Hashtable();
             locationIndex = 0;
 
             this.keyPath = keyPath;
@@ -100,10 +96,9 @@ namespace knightL_on_chessboard
                 String key;
                 key = xDestination.ToString() + yDestination.ToString();
                 bool isNewLocation = this.keyPath.Add(key);
-                if (posibleLocationsToGoKeys.Contains(key) == false && isNewLocation == true)
+                if(isNewLocation == true)
                 {
                     var newLocation = new Knight(xDestination, yDestination, this.keyPath, this);
-                    this.posibleLocationsToGoKeys.Add(key, newLocation);
                     this.posibleLocationsToGo.Add(newLocation);
                 }
             }
